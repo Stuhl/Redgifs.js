@@ -1,0 +1,25 @@
+{
+  "name": "Redgifs.js",
+  "version": "1.0.0",
+  "source": "src/Redgifs.js",
+  "main": "dist/main.js",
+  "description": "A Redgifs API Wrapper For JavaScript",
+  "scripts": {
+    "watch": "parcel watch",
+    "build": "parcel build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Stuhl/Redgifs.js.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Stuhl/Redgifs.js/issues"
+  },
+  "homepage": "https://github.com/Stuhl/Redgifs.js#readme",
+  "devDependencies": {
+    "parcel": "^2.0.0-rc.0"
+  }
+}
