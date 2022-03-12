@@ -1,8 +1,7 @@
-import EndpointGroupsEnum from "./EndpointGroupsEnum"
-import VersionEnum        from "./VersionsEnum"
-import FetchTypesEnum     from "./FetchTypesEnum"
+import FetchTypesEnum from "./FetchTypesEnum"
 
-import ParameterValidator from "../parameter-validation/ParameterValidator"
+import PathParameter  from "../path-parameter/PathParameter"
+import QueryParameter from "../query-parameter/QueryParameter"
 
 class Endpoint {
   constructor(config) {
@@ -10,7 +9,9 @@ class Endpoint {
 
     this.endpoint           = this._buildEndpoint(config)
     this.fetchType          = config.fetchType
-    this.parameterValidator = new ParameterValidator(config.parameters)
+    this.pathParameter      = new PathParameter(config.pathParameter)
+    this.queryParameter     = new QueryParameter(config.queryParameter)
+
 
     return {
       getEndpoint: this.getEndpoint.bind(this),
@@ -44,61 +45,28 @@ class Endpoint {
     return this.execute.bind(this)
   }
 
-  _buildQuery(parameters) {
-    let query = "?"
-
-    for (let key in parameters) {
-      const value = parameters[key]
-      query += key + "=" + value + "&"
-    }
-
-    return query.slice(0, -1)
-  }
-
   _buildEndpoint(config) {
     return `${config.baseURL}${config.endpoint}`
   }
 
   _checkParameters(parameters) {
-    this.parameterValidator.checkParameters(parameters)
+    this.queryParamter.checkParameters(parameters.query)
+    this.pathParmaeter.checkParameters(parmaeters.path)
   }
 
   _hasOptionalParameters() {
-    return this.parameterValidator.hasOptionalParameters()
+    this._hasOptionalQueryParameters()
+  }
+
+  _hasOptionalQueryParameters() {
+    console.log(this.queryParameter)
+    return this.queryParameter.hasOptionalParameters()
   }
 
   _assertConfig(config) {
-    // this._assertGroup(config)
-    // this._assertVersion(config)
     this._assertFetchType(config)
   }
 
-  _assertGroup(config) {
-    if (!config.group) {
-      throw new Error("Endpoint::constructor(): Property 'group' is missing.")
-    }
-
-    if (typeof config.group !== "string") {
-      throw new Error(`Endpoint::constructor(): Value of property 'group' is not a string. Has to be of type <string>. Current type: <${typeof config.group}>`)
-    }
-
-    if (!(EndpointGroupsEnum.find(validGroup => validGroup === config.group))) {
-      throw new Error(`Endpoint::constructor(): '${config.group}' is not a valid group. Valid groups are: ${this._enumToString(EndpointGroupsEnum)}`)
-    }
-  }
-  _assertVersion(config) {
-    if (!config.version) {
-      throw new Error("Endpoint::constructor(): Property 'version' is missing.")
-    }
-
-    if (typeof config.version !== "number") {
-      throw new Error(`Endpoint::constructor(): Value of property 'version' is not a number. Has to be of type <number>. Current type: <${typeof config.version}>`)
-    }
-
-    if (!(VersionEnum.find(validVersion => validVersion === config.version))) {
-      throw new Error(`Endpoint::constructor(): '${config.version}' is not a valid version. Valid versions are: ${this._enumToString(VersionEnum)}`)
-    }
-  }
   _assertFetchType(config) {
     if (!config.fetchType) {
       throw new Error("Endpoint::constructor(): Property 'fetchType' is missing.")
